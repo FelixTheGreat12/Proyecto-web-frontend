@@ -1,0 +1,300 @@
+<div class="container-fluid p-0">
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg bg-primary navbar-dark shadow-lg">
+    <div class="container">
+      <a class="navbar-brand fw-bold" href="#">
+        <i class="bi bi-clock-history me-2"></i>Usuarios
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/dashboard" routerLinkActive="active">Inicio</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" routerLink="/records" routerLinkActive="active">Usuarios</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/creditos" routerLinkActive="active">Créditos</a>
+          </li>
+        </ul>
+        <div class="d-flex" role="search">
+          <p class="text-white mt-3 me-4">¡Bienvenido <span class="fw-bolder">{{user}}</span>!</p>
+          <button class="btn btn-outline-light mt-2 mb-2" type="button" (click)="logout()">Salir</button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container mt-5">
+    <div class="row justify-content-center">
+      <div class="col-md-8">
+        <div class="card shadow-lg border-0">
+          <div class="card-body text-center p-4">
+            <div class="row">
+              <div class="col-8">
+                <h2 class="text-center mb-4">Registros de Usuarios</h2>
+              </div>
+              <div class="col-4">
+                <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#createModal">Agregar
+                  Nuevo</button>
+              </div>
+            </div>
+
+            <table class="table table-striped table-bordered">
+              <thead class="thead-dark">
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">Usuarios</th>
+                  <th scope="col">Email</th>
+                  <th scope="col">Password</th>
+                  <th scope="col">createdAt</th>
+                  <th scope="col">updatedAt</th>
+                  <th scope="col">Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let time of listadoTimes; let i = index">
+                  <th scope="row">{{ time.user_id }}</th>
+                  <td>{{ time.username }}</td>
+                  <td>{{ time.email }}</td>
+                  <td>{{ time.password }}</td>
+                  <td>{{ time.createdAt }}</td>
+                  <td>{{ time.updatedAt }}</td>
+                  <td>
+                    <button class="btn btn-sm btn-primary me-2" data-bs-toggle="modal" data-bs-target="#editModal"
+                      (click)="onSelectTime(time)">Editar</button>
+                    <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal"
+                      (click)="onSelectTime(time)">Eliminar</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+  </div>
+
+  <!-- Create Modal -->
+  <div class="modal fade" id="createModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Crear nuevo Usuarios</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <form id="timeTrackingForm" [formGroup]="createForm" (ngSubmit)="onSubmitCreate()">
+            <!-- Campo de Hora de Entrada -->
+            <div class="mb-3">
+              <label for="username" class="form-label">Usernames</label>
+              <input type="text" id="username" class="form-control" required formControlName="username"
+                [ngClass]="{ 'is-invalid': username.invalid && username.touched }">
+              <div *ngIf="username.invalid && username.touched" class="invalid-feedback">
+                Rellena los usuarios
+              </div>
+            </div>
+            <!-- Campo de Hora de Salida -->
+            <div class="mb-3">
+              <label for="email" class="form-label">Email</label>
+              <input type="text" id="email" class="form-control" required
+                formControlName="email"
+                [ngClass]="{ 'is-invalid': email.invalid && email.touched }">
+              <div *ngIf="email.invalid && email.touched" class="invalid-feedback">
+                Rellena el email
+              </div>
+            </div>
+
+            <!-- Campo de Hora de Salida -->
+            <div class="mb-3">
+              <label for="password" class="form-label">Password</label>
+              <input type="text" id="password" class="form-control" required
+                formControlName="password"
+                [ngClass]="{ 'is-invalid': password.invalid && password.touched }">
+              <div *ngIf="password.invalid && password.touched" class="invalid-feedback">
+                Password obligatoria
+              </div>
+            </div>
+
+            <!-- Campo de Hora de Salida -->
+            <div class="mb-3">
+              <label for="createdAt" class="form-label">Hora de Creacion</label>
+              <input type="text" id="createdAt" class="form-control" required
+                formControlName="createdAt"
+                [ngClass]="{ 'is-invalid': createdAt.invalid && createdAt.touched }">
+              <div *ngIf="createdAt.invalid && createdAt.touched" class="invalid-feedback">
+                La hora de creacion es obligatoria
+              </div>
+            </div>
+
+            <!-- Campo de Hora de Salida -->
+            <div class="mb-3">
+              <label for="updatedAt" class="form-label">Hora de Actualizacion</label>
+              <input type="text" id="updatedAt" class="form-control" required
+                formControlName="updatedAt"
+                [ngClass]="{ 'is-invalid': updatedAt.invalid && updatedAt.touched }">
+              <div *ngIf="updatedAt.invalid && updatedAt.touched" class="invalid-feedback">
+                La hora de Actualizaciones obligatoria.
+              </div>
+            </div>
+
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+          <button type="submit" class="btn btn-success" form="timeTrackingForm">Guardar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Modal -->
+  <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Editar Usuarios</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <form id="editForm" [formGroup]="editForm" (ngSubmit)="onSubmitEdit()">
+            <div class="mb-3">
+              <label for="username" class="form-label">Username</label>
+              <input
+                type="text"
+                id="username"
+                class="form-control"
+                formControlName="usernameEdit"
+                [ngClass]="{ 'is-invalid': editForm.get('usernameEdit')?.invalid && editForm.get('usernameEdit')?.touched }"
+              />
+              <div *ngIf="editForm.get('usernameEdit')?.invalid && editForm.get('usernameEdit')?.touched" class="invalid-feedback">
+                Este campo es obligatorio.
+              </div>
+            </div>
+          
+            <div class="mb-3">
+              <label for="email" class="form-label">Email</label>
+              <input
+                type="text"
+                id="email"
+                class="form-control"
+                formControlName="emailEdit"
+                [ngClass]="{ 'is-invalid': editForm.get('emailEdit')?.invalid && editForm.get('emailEdit')?.touched }"
+              />
+              <div *ngIf="editForm.get('emailEdit')?.invalid && editForm.get('emailEdit')?.touched" class="invalid-feedback">
+                Este campo es obligatorio.
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="password" class="form-label">password</label>
+              <input
+                type="text"
+                id="password"
+                class="form-control"
+                formControlName="passwordEdit"
+                [ngClass]="{ 'is-invalid': editForm.get('passwordEdit')?.invalid && editForm.get('passwordEdit')?.touched }"
+              />
+              <div *ngIf="editForm.get('passwordEdit')?.invalid && editForm.get('passwordEdit')?.touched" class="invalid-feedback">
+                Este campo es obligatorio.
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="createdAt" class="form-label">Email</label>
+              <input
+                type="text"
+                id="createdAt"
+                class="form-control"
+                formControlName="createdAtEdit"
+                [ngClass]="{ 'is-invalid': editForm.get('createdAtEdit')?.invalid && editForm.get('createdAtEdit')?.touched }"
+              />
+              <div *ngIf="editForm.get('createdAtEdit')?.invalid && editForm.get('createdAtEdit')?.touched" class="invalid-feedback">
+                Este campo es obligatorio.
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="updatedAt" class="form-label">Email</label>
+              <input
+                type="text"
+                id="updatedAt"
+                class="form-control"
+                formControlName="updatedAtEdit"
+                [ngClass]="{ 'is-invalid': editForm.get('updatedAtEdit')?.invalid && editForm.get('updatedAtEdit')?.touched }"
+              />
+              <div *ngIf="editForm.get('updatedAtEdit')?.invalid && editForm.get('updatedAtEdit')?.touched" class="invalid-feedback">
+                Este campo es obligatorio.
+              </div>
+            </div>
+
+
+          </form>
+          
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+          <button type="submit" class="btn btn-primary" form="editForm">Guardar Cambios</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Delete Modal -->
+  <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Eliminar Usuarios</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <p class="text-center fs-6">¿Estás seguro que quieres eliminar este Time Tracking?</p>
+          <table class="table">
+            <thead class="thead-dark">
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Username</th>
+                <th scope="col">Email</th>
+                <th scope="col">Password</th>
+                <th scope="col">createdAt/th>
+                <th scope="col">updatedAt</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <!-- Mostrar trackingId si existe -->
+                <th scope="row">{{ selectedTime?.user_id || 'No disponible' }}</th>
+
+                <!-- Mostrar username si existe -->
+                <td>{{ selectedTime?.username ? selectedTime.username : 'No registrado' }}</td>
+
+                <!-- Mostrar email si existe -->
+                <td>{{ selectedTime?.email ? selectedTime.email : 'No registrado' }}</td>
+
+                <th scope="row">{{ selectedTime?.email || 'No disponible' }}</th>
+
+                <th scope="row">{{ selectedTime?.createdAt || 'No disponible' }}</th>
+
+                <th scope="row">{{ selectedTime?.updatedAt || 'No disponible' }}</th>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+          <button type="button" class="btn btn-danger" (click)="onDelete()" data-bs-dismiss="modal">Eliminar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<app-spinner></app-spinner>
